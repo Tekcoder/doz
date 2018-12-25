@@ -1449,7 +1449,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  */
 
 function sanitize(str) {
-    return typeof str === 'string' ? str.replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : str;
+    return typeof str === 'string' ? str.replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&quot;') : str;
 }
 
 var ObservableSlim = function () {
@@ -1497,10 +1497,10 @@ var ObservableSlim = function () {
         var observable = originalObservable || null;
 
         // record the nested path taken to access this object -- if there was no path then we provide the first empty entry
-        var path = originalPath || [{ "target": target, "property": "" }];
+        var path = originalPath || [{ target: target, property: '' }];
         paths.push(path);
 
-        // in order to accurately report the "previous value" of the "length" property on an Array
+        // in order to accurately report the 'previous value' of the 'length' property on an Array
         // we must use a helper property because intercepting a length change is not always possible as of 8/13/2018 in
         // Chrome -- the new `length` value is already set by the time the `set` handler is invoked
         if (target instanceof Array) target.__length = target.length;
@@ -1519,7 +1519,7 @@ var ObservableSlim = function () {
         */
         var _getPath = function _getPath(target, property, jsonPointer) {
 
-            var fullPath = "";
+            var fullPath = '';
             var lastTarget = null;
 
             // loop over each item in the path and append it to full path
@@ -1532,17 +1532,17 @@ var ObservableSlim = function () {
                     path[i].property = lastTarget.indexOf(path[i].target);
                 }
 
-                fullPath = fullPath + "." + path[i].property;
+                fullPath = fullPath + '.' + path[i].property;
                 lastTarget = path[i].target;
             }
 
             // add the current property
-            fullPath = fullPath + "." + property;
+            fullPath = fullPath + '.' + property;
 
             // remove the beginning two dots -- ..foo.bar becomes foo.bar (the first item in the nested chain doesn't have a property name)
             fullPath = fullPath.substring(2);
 
-            if (jsonPointer === true) fullPath = "/" + fullPath.replace(/\./g, "/");
+            if (jsonPointer === true) fullPath = '/' + fullPath.replace(/\./g, '/');
 
             return fullPath;
         };
@@ -1595,17 +1595,17 @@ var ObservableSlim = function () {
 
                 // implement a simple check for whether or not the object is a proxy, this helps the .create() method avoid
                 // creating Proxies of Proxies.
-                if (property === "__getTarget") {
+                if (property === '__getTarget') {
                     return target;
-                } else if (property === "__isProxy") {
+                } else if (property === '__isProxy') {
                     return true;
                     // from the perspective of a given observable on a parent object, return the parent object of the given nested object
-                } else if (property === "__getParent") {
+                } else if (property === '__getParent') {
                     return function (i) {
-                        if (typeof i === "undefined") i = 1;
-                        var parentPath = _getPath(target, "__getParent").split(".");
+                        if (typeof i === 'undefined') i = 1;
+                        var parentPath = _getPath(target, '__getParent').split('.');
                         parentPath.splice(-(i + 1), i + 1);
-                        return _getProperty(observable.parentProxy, parentPath.join("."));
+                        return _getProperty(observable.parentProxy, parentPath.join('.'));
                     };
                 }
 
@@ -1644,7 +1644,7 @@ var ObservableSlim = function () {
 
                     // create a shallow copy of the path array -- if we didn't create a shallow copy then all nested objects would share the same path array and the path wouldn't be accurate
                     var newPath = path.slice(0);
-                    newPath.push({ "target": targetProp, "property": property });
+                    newPath.push({ 'target': targetProp, property: property });
                     return _create(targetProp, domDelay, observable, newPath);
                 } else {
                     return observable.renderMode ? sanitize(targetProp) : targetProp;
@@ -1664,7 +1664,7 @@ var ObservableSlim = function () {
 
                 // record the deletion that just took place
                 changes.push({
-                    type: "delete",
+                    type: 'delete',
                     target: target,
                     property: property,
                     newValue: null,
@@ -1734,19 +1734,19 @@ var ObservableSlim = function () {
                 // Only record this change if:
                 // 	1. the new value differs from the old one
                 //	2. OR if this proxy was not the original proxy to receive the change
-                // 	3. OR the modified target is an array and the modified property is "length" and our helper property __length indicates that the array length has changed
+                // 	3. OR the modified target is an array and the modified property is 'length' and our helper property __length indicates that the array length has changed
                 //
                 // Regarding #3 above: mutations of arrays via .push or .splice actually modify the .length before the set handler is invoked
                 // so in order to accurately report the correct previousValue for the .length, we have to use a helper property.
-                if (targetProp !== value || originalChange === false || property === "length" && target instanceof Array && target.__length !== value) {
+                if (targetProp !== value || originalChange === false || property === 'length' && target instanceof Array && target.__length !== value) {
 
                     var foundObservable = true;
 
                     var typeOfTargetProp = typeof targetProp === 'undefined' ? 'undefined' : _typeof(targetProp);
 
                     // determine if we're adding something new or modifying somethat that already existed
-                    var type = "update";
-                    if (typeOfTargetProp === "undefined") type = "add";
+                    var type = 'update';
+                    if (typeOfTargetProp === 'undefined') type = 'add';
 
                     // get the path of the object property being modified
                     var _currentPath = _getPath(target, property);
@@ -1780,7 +1780,7 @@ var ObservableSlim = function () {
 
                     // mutations of arrays via .push or .splice actually modify the .length before the set handler is invoked
                     // so in order to accurately report the correct previousValue for the .length, we have to use a helper property.
-                    if (property === "length" && target instanceof Array && target.__length !== value) {
+                    if (property === 'length' && target instanceof Array && target.__length !== value) {
                         changes[changes.length - 1].previousValue = target.__length;
                         target.__length = value;
                     }
@@ -1838,7 +1838,7 @@ var ObservableSlim = function () {
                             // the UI rendering -- there's no need to execute the clean up immediately
                             setTimeout(function () {
 
-                                if (typeOfTargetProp === "object" && targetProp !== null) {
+                                if (typeOfTargetProp === 'object' && targetProp !== null) {
 
                                     // check if the to-be-overwritten target property still exists on the target object
                                     // if it does still exist on the object, then we don't want to stop observing it. this resolves
@@ -1946,11 +1946,8 @@ var ObservableSlim = function () {
 
         var __targetPosition = target.__targetPosition;
         if (!(__targetPosition > -1)) {
-            Object.defineProperty(target, "__targetPosition", {
-                value: targets.length,
-                writable: false,
-                enumerable: false,
-                configurable: false
+            Object.defineProperty(target, '__targetPosition', {
+                value: targets.length
             });
         }
 
@@ -2017,14 +2014,14 @@ var ObservableSlim = function () {
                 var _target = _target.__getTarget;
                 //if it is, then we should throw an error. we do not allow creating proxies of proxies
                 // because -- given the recursive design of ObservableSlim -- it would lead to sharp increases in memory usage
-                //throw new Error("ObservableSlim.create() cannot create a Proxy for a target object that is also a Proxy.");
+                //throw new Error('ObservableSlim.create() cannot create a Proxy for a target object that is also a Proxy.');
             }
 
             // fire off the _create() method -- it will create a new observable and proxy and return the proxy
             var proxy = _create(target, domDelay);
 
             // assign the observer function
-            if (typeof observer === "function") this.observe(proxy, observer);
+            if (typeof observer === 'function') this.observe(proxy, observer);
 
             // recursively loop over all nested objects on the proxy we've just created
             // this will allow the top observable to observe any changes that occur on a nested object
