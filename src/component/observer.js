@@ -1,4 +1,4 @@
-const proxy = require('../utils/proxy');
+const proxy = require('../utils/proxy-next');
 const events = require('./hooks');
 const updateBoundElements = require('./update-bound-element');
 const propsListener = require('./props-listener');
