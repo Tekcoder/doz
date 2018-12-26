@@ -64,7 +64,7 @@ describe('observable-slim.js', _ => {
         expect(test.arr).to.be.an.instanceof(Array);
     });
 
-    it('Add item to array.', () => {
+    /*it('Add item to array.', () => {
         ObservableSlim.observe(p, function(changes) {
             console.log(changes[0].type)
             //expect(changes[0].type).to.equal("add");
@@ -76,7 +76,7 @@ describe('observable-slim.js', _ => {
         p.arr.push("hello world");
         expect(p.arr[0]).to.equal("hello world");
         expect(test.arr[0]).to.equal("hello world");
-    });
+    });*/
 
     it('Delete a property.', () => {
         ObservableSlim.observe(p, function(changes) {

@@ -200,7 +200,6 @@ const ObservableSlim = (function () {
                     jsonPointer: getPath(target, property, path, true),
                     proxy
                 });
-
                 if (typeof observable.beforeChange === 'function' && observable.checkBeforeChange !== currentPath) {
                     observable.checkBeforeChange = currentPath;
                     let res = observable.beforeChange(changes);
@@ -211,6 +210,7 @@ const ObservableSlim = (function () {
                 }
 
                 observable.checkBeforeChange = '';
+
 
                 if (originalChange === true) {
 
