@@ -4,7 +4,7 @@ const hooks = require('./hooks');
 const update = require('../vdom').updateElement;
 const store = require('./store');
 const ids = require('./ids');
-const proxy = require('../utils/proxy');
+//const proxy = require('../utils/proxy');
 const toInlineStyle = require('../utils/to-inline-style');
 const queueReady = require('./queue-ready');
 const queueDraw = require('./queue-draw');
@@ -131,11 +131,11 @@ class Component {
     }
 
     beginSafeRender() {
-        proxy.beginRender(this.props)
+        //proxy.beginRender(this.props)
     }
 
     endSafeRender() {
-        proxy.endRender(this.props)
+        //proxy.endRender(this.props)
     }
 
     emit(name, ...args) {
@@ -149,13 +149,13 @@ class Component {
     each(obj, func, safe = false) {
         let res;
         if (Array.isArray(obj)) {
-            if (safe) this.beginSafeRender();
+            //if (safe) this.beginSafeRender();
             res = obj.map(func).map(stringEl => {
                 if (typeof stringEl === 'string') {
                     return stringEl.trim()
                 }
             }).join('');
-            if (safe) this.endSafeRender();
+            //if (safe) this.endSafeRender();
         }
         return res;
     }
@@ -181,9 +181,9 @@ class Component {
     }
 
     render(initial) {
-        this.beginSafeRender();
+        //this.beginSafeRender();
         const template = this.template(h);
-        this.endSafeRender();
+        //this.endSafeRender();
         let next = compile(template);
         this.app.emit('draw', next, this._prev, this);
         queueDraw.emit(this, next, this._prev);
